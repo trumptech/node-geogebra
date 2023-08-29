@@ -69,6 +69,8 @@ class GGBPool {
         this.availablePages = await Promise.all(promises2);
         DEBUG && console.log("pages have been created");
         let url = path.resolve(__dirname, "../geogebra-math-apps-bundle/Geogebra/HTML5/5.0/simple.html");
+        console.log(__dirname);
+        console.log(url);
         if (/Windows/.test(os_1.default.type())) {
             url = "file://" + url;
         }
