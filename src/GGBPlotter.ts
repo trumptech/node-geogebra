@@ -81,7 +81,7 @@ export class GGBPlotter {
             window.ggbApplet.setFileJSON(x);
         }, fileJSON);
         // TODO:find optimal way to solve the setFileJSON delay problem
-        await new Promise(r => setTimeout(r, 100));
+        await new Promise(r => setTimeout(r, 1500));
     }
     async addFileJSON(fileJSON: Record<"fileName" | "fileContent", string>[]): Promise<void> {
         DEBUG && console.log("addFileJSON", fileJSON.length);
@@ -93,7 +93,7 @@ export class GGBPlotter {
             window.ggbApplet.setFileJSON(originalJsonFile);
         }, fileJSON);
         // TODO:find optimal way to solve the setFileJSON delay problem
-        await new Promise(r => setTimeout(r, 100));
+        await new Promise(r => setTimeout(r, 1500));
     }
     async getFileJSON(): Promise<Record<"archive", Record<"fileName" | "fileContent", string>[]>> {
         const page = await this.pagePromise;
