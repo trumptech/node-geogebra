@@ -1,3 +1,4 @@
+import os from 'os';
 import * as puppeteer from 'puppeteer';
 import { EventEmitter } from 'events';
 import { GGBOptions } from './GGBOptions';
@@ -38,14 +39,19 @@ export class GGBPlotter {
             //         "--no-startup-window"]
             // };
 
-            this.browser = await puppeteer.launch({
+            this.browser = await puppeteer.launch(/Windows/.test(os.type()) ? {} : {
                 headless: true,
                 executablePath: `/usr/bin/google-chrome`,
                 args: [`--no-sandbox`, `--headless`, `--disable-gpu`, `--disable-dev-shm-usage`],
             });
+
             const newPage = await this.browser.newPage();
-            const dir = path.resolve(__dirname, "../geogebra-math-apps-bundle/Geogebra/HTML5/5.0/simple.html");
-            const url = "file://" + dir;
+
+            let url = path.resolve(__dirname, "../geogebra-math-apps-bundle/Geogebra/HTML5/5.0/simple.html");
+            if (/Windows/.test(os.type())) {
+                url = "file://" + url;
+            }
+
             await newPage.goto(url, { waitUntil: 'networkidle2' });
             DEBUG && console.log(url + " has been loaded");
             await newPage.waitForFunction("window.ggbApplet!=null");

@@ -4,6 +4,7 @@ import { GGBPlotter } from './GGBPlotter';
 import { PriorityQueue } from './PriorityQueue';
 import { GGBOptions } from './GGBOptions';
 import * as path from 'path';
+import os from "os";
 
 let window: any;
 const DEBUG = false;
@@ -45,7 +46,7 @@ export class GGBPool {
         //         "--no-startup-window"]
         // };
 
-        this.browser = await puppeteer.launch({
+        this.browser = await puppeteer.launch(/Windows/.test(os.type()) ? {} : {
             headless: true,
             executablePath: `/usr/bin/google-chrome`,
             args: [`--no-sandbox`, `--headless`, `--disable-gpu`, `--disable-dev-shm-usage`],
@@ -67,9 +68,10 @@ export class GGBPool {
         this.availablePages = await Promise.all(promises2);
         DEBUG && console.log("pages have been created");
 
-        // Load empty geogebra templates
-        const dir = path.resolve(__dirname, "../geogebra-math-apps-bundle/Geogebra/HTML5/5.0/simple.html");
-        const url = "file://" + dir;
+        let url = path.resolve(__dirname, "../geogebra-math-apps-bundle/Geogebra/HTML5/5.0/simple.html");
+        if (/Windows/.test(os.type())) {
+            url = "file://" + url;
+        }
         let promises3 = new Array(this.opts.plotters);
         for (var i = 0; i < this.opts.plotters; i++) {
             promises3[i] = this.availablePages[i].goto(url, { waitUntil: 'networkidle2' });

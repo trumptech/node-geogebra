@@ -31,6 +31,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GGBPool = void 0;
 const puppeteer = __importStar(require("puppeteer"));
@@ -38,6 +41,7 @@ const events_1 = require("events");
 const GGBPlotter_1 = require("./GGBPlotter");
 const PriorityQueue_1 = require("./PriorityQueue");
 const path = __importStar(require("path"));
+const os_1 = __importDefault(require("os"));
 let window;
 const DEBUG = false;
 class GGBPool {
@@ -57,7 +61,7 @@ class GGBPool {
             if (this.isCreated) {
                 return this;
             }
-            this.browser = yield puppeteer.launch({
+            this.browser = yield puppeteer.launch(/Windows/.test(os_1.default.type()) ? {} : {
                 headless: true,
                 executablePath: `/usr/bin/google-chrome`,
                 args: [`--no-sandbox`, `--headless`, `--disable-gpu`, `--disable-dev-shm-usage`],
@@ -74,8 +78,10 @@ class GGBPool {
             }
             this.availablePages = yield Promise.all(promises2);
             DEBUG && console.log("pages have been created");
-            const dir = path.resolve(__dirname, "../geogebra-math-apps-bundle/Geogebra/HTML5/5.0/simple.html");
-            const url = "file://" + dir;
+            let url = path.resolve(__dirname, "../geogebra-math-apps-bundle/Geogebra/HTML5/5.0/simple.html");
+            if (/Windows/.test(os_1.default.type())) {
+                url = "file://" + url;
+            }
             let promises3 = new Array(this.opts.plotters);
             for (var i = 0; i < this.opts.plotters; i++) {
                 promises3[i] = this.availablePages[i].goto(url, { waitUntil: 'networkidle2' });

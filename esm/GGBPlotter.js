@@ -22,8 +22,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GGBPlotter = void 0;
+const os_1 = __importDefault(require("os"));
 const puppeteer = __importStar(require("puppeteer"));
 const path = __importStar(require("path"));
 let window;
@@ -48,14 +52,16 @@ class GGBPlotter {
             return page;
         }
         else {
-            this.browser = await puppeteer.launch({
+            this.browser = await puppeteer.launch(/Windows/.test(os_1.default.type()) ? {} : {
                 headless: true,
                 executablePath: `/usr/bin/google-chrome`,
                 args: [`--no-sandbox`, `--headless`, `--disable-gpu`, `--disable-dev-shm-usage`],
             });
             const newPage = await this.browser.newPage();
-            const dir = path.resolve(__dirname, "../geogebra-math-apps-bundle/Geogebra/HTML5/5.0/simple.html");
-            const url = "file://" + dir;
+            let url = path.resolve(__dirname, "../geogebra-math-apps-bundle/Geogebra/HTML5/5.0/simple.html");
+            if (/Windows/.test(os_1.default.type())) {
+                url = "file://" + url;
+            }
             await newPage.goto(url, { waitUntil: 'networkidle2' });
             DEBUG && console.log(url + " has been loaded");
             await newPage.waitForFunction("window.ggbApplet!=null");
