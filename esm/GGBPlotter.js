@@ -58,10 +58,8 @@ class GGBPlotter {
                 args: [`--no-sandbox`, `--headless`, `--disable-gpu`, `--disable-dev-shm-usage`],
             });
             const newPage = await this.browser.newPage();
-            let url = path.resolve(__dirname, "../geogebra-math-apps-bundle/Geogebra/HTML5/5.0/simple.html");
-            if (/Windows/.test(os_1.default.type())) {
-                url = "file://" + url;
-            }
+            let url = path.resolve(__dirname, "../geogebra-math-apps-bundle/GeoGebra/HTML5/5.0/simple.html");
+            url = "file://" + url;
             await newPage.goto(url, { waitUntil: 'networkidle2' });
             DEBUG && console.log(url + " has been loaded");
             await newPage.waitForFunction("window.ggbApplet!=null");

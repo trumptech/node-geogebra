@@ -68,12 +68,8 @@ class GGBPool {
         }
         this.availablePages = await Promise.all(promises2);
         DEBUG && console.log("pages have been created");
-        let url = path.resolve(__dirname, "../geogebra-math-apps-bundle/Geogebra/HTML5/5.0/simple.html");
-        console.log(__dirname);
-        console.log(url);
-        if (/Windows/.test(os_1.default.type())) {
-            url = "file://" + url;
-        }
+        let url = path.resolve(__dirname, "../geogebra-math-apps-bundle/GeoGebra/HTML5/5.0/simple.html");
+        url = "file://" + url;
         let promises3 = new Array(this.opts.plotters);
         for (var i = 0; i < this.opts.plotters; i++) {
             promises3[i] = this.availablePages[i].goto(url, { waitUntil: 'networkidle2' });

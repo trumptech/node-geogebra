@@ -47,10 +47,8 @@ export class GGBPlotter {
 
             const newPage = await this.browser.newPage();
 
-            let url = path.resolve(__dirname, "../geogebra-math-apps-bundle/Geogebra/HTML5/5.0/simple.html");
-            if (/Windows/.test(os.type())) {
-                url = "file://" + url;
-            }
+            let url = path.resolve(__dirname, "../geogebra-math-apps-bundle/GeoGebra/HTML5/5.0/simple.html");
+            url = "file://" + url;
 
             await newPage.goto(url, { waitUntil: 'networkidle2' });
             DEBUG && console.log(url + " has been loaded");
