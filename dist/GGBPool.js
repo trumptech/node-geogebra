@@ -57,7 +57,11 @@ class GGBPool {
             if (this.isCreated) {
                 return this;
             }
-            this.browser = yield puppeteer.launch();
+            this.browser = yield puppeteer.launch({
+                headless: true,
+                executablePath: `/usr/bin/google-chrome`,
+                args: [`--no-sandbox`, `--headless`, `--disable-gpu`, `--disable-dev-shm-usage`],
+            });
             const promises = new Array(this.opts.plotters);
             for (var i = 0; i < this.opts.plotters; i++) {
                 promises[i] = this.browser.createIncognitoBrowserContext();

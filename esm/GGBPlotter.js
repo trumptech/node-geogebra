@@ -48,7 +48,11 @@ class GGBPlotter {
             return page;
         }
         else {
-            this.browser = await puppeteer.launch();
+            this.browser = await puppeteer.launch({
+                headless: true,
+                executablePath: `/usr/bin/google-chrome`,
+                args: [`--no-sandbox`, `--headless`, `--disable-gpu`, `--disable-dev-shm-usage`],
+            });
             const newPage = await this.browser.newPage();
             const dir = path.resolve(__dirname, "../geogebra-math-apps-bundle/Geogebra/HTML5/5.0/simple.html");
             const url = "file://" + dir;
