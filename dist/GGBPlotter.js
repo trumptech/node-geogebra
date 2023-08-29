@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -10,28 +33,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GGBPlotter = void 0;
-const puppeteer = require("puppeteer");
-const path = require("path");
+const puppeteer = __importStar(require("puppeteer"));
+const path = __importStar(require("path"));
 let window;
 const DEBUG = false;
-function sleep(ms) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-    });
-}
 class GGBPlotter {
-    constructor(id, page, releasedEmitter) {
-        if (id) {
-            if (typeof (id) == "number") {
-                this.id = id;
-            }
-            else {
-                this.poolOpts = Object.assign({ plotters: 3, ggb: "local" }, id);
-                this.id = Math.random().toString(32).substring(2);
+    constructor(options, page, releasedEmitter) {
+        if (options) {
+            this.poolOpts = Object.assign({ plotters: 3 }, options);
+            if (options.id) {
+                this.id = options.id;
             }
         }
         else {
-            this.poolOpts = { plotters: 3, ggb: "local" };
+            this.poolOpts = { plotters: 3 };
             this.id = Math.random().toString(32).substring(2);
         }
         this.pagePromise = this.createPage(page);
@@ -43,28 +58,14 @@ class GGBPlotter {
                 return page;
             }
             else {
-                const opts = {
-                    devtools: false,
-                    args: ["--allow-file-access-from-files", "--non-secure",
-                        "--allow-running-insecure-content", "--no-sandbox",
-                        "--no-startup-window"]
-                };
-                this.browser = yield puppeteer.launch(opts);
+                this.browser = yield puppeteer.launch();
                 const newPage = yield this.browser.newPage();
-                let url;
-                if (this.poolOpts.ggb === "local") {
-                    const dir = path.resolve(__dirname, "../geogebra-math-apps-bundle/Geogebra/HTML5/5.0/GeoGebra.html");
-                    url = "file://" + dir;
-                }
-                else {
-                    url = "https://www.geogebra.org/classic";
-                }
+                const dir = path.resolve(__dirname, "../geogebra-math-apps-bundle/Geogebra/HTML5/5.0/simple.html");
+                const url = "file://" + dir;
                 yield newPage.goto(url, { waitUntil: 'networkidle2' });
                 DEBUG && console.log(url + " has been loaded");
                 yield newPage.waitForFunction("window.ggbApplet!=null");
                 DEBUG && console.log("ggbApplet is ready");
-                yield newPage.evaluate('window.ggbApplet.evalCommand(\'SetPerspective("G")\\nShowGrid(true)\')');
-                DEBUG && console.log("SetPerspective->G, showGrid->true");
                 return newPage;
             }
         });
@@ -77,15 +78,65 @@ class GGBPlotter {
     evalGGBScript(ggbScript, width, height) {
         return __awaiter(this, void 0, void 0, function* () {
             const page = yield this.pagePromise;
-            // 53 px accounts for the toolbar which cannot be removed in geogebra app mode
+            DEBUG && page.on('console', msg => console.log('PAGE LOG:', msg.text()));
             yield page.setViewport({ width: width || 600, height: (height || 400) + 53 });
             if (ggbScript && ggbScript.length) {
                 yield page.evaluate((x) => window.ggbApplet.evalCommand(x), ggbScript.join("\n"));
             }
         });
     }
+    setFileJSON(fileJSON) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const page = yield this.pagePromise;
+            DEBUG && page.on('console', msg => console.log('PAGE LOG:', msg.text()));
+            yield page.evaluate((x) => {
+                window.ggbApplet.setFileJSON(x);
+            }, fileJSON);
+            yield new Promise(r => setTimeout(r, 100));
+        });
+    }
+    addFileJSON(fileJSON) {
+        return __awaiter(this, void 0, void 0, function* () {
+            DEBUG && console.log("addFileJSON", fileJSON.length);
+            const page = yield this.pagePromise;
+            DEBUG && page.on('console', msg => console.log('PAGE LOG:', msg.text()));
+            yield page.evaluate((x) => {
+                let originalJsonFile = window.ggbApplet.getFileJSON();
+                originalJsonFile.archive = [...originalJsonFile.archive, ...x];
+                window.ggbApplet.setFileJSON(originalJsonFile);
+            }, fileJSON);
+            yield new Promise(r => setTimeout(r, 100));
+        });
+    }
+    getFileJSON() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const page = yield this.pagePromise;
+            DEBUG && page.on('console', msg => console.log('PAGE LOG:', msg.text()));
+            const out = yield page.evaluate(() => window.ggbApplet.getFileJSON());
+            return out;
+        });
+    }
+    setXML(xml) {
+        return __awaiter(this, void 0, void 0, function* () {
+            DEBUG && console.log("setXML", xml.length);
+            const page = yield this.pagePromise;
+            DEBUG && page.on('console', msg => console.log('PAGE LOG:', msg.text()));
+            yield page.evaluate((x) => {
+                window.ggbApplet.setXML(x);
+            }, xml);
+        });
+    }
+    exportXML() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const page = yield this.pagePromise;
+            DEBUG && page.on('console', msg => console.log('PAGE LOG:', msg.text()));
+            const out = yield page.evaluate(() => window.ggbApplet.getXML());
+            return out;
+        });
+    }
     exportPNG(alpha, dpi) {
         return __awaiter(this, void 0, void 0, function* () {
+            DEBUG && console.log("exportPNG", alpha, dpi);
             const pdf64 = yield this.exportPNG64(alpha, dpi);
             const raw = pdf64.replace("data:image/png;base64,", "");
             return Buffer.from(raw, 'base64');
@@ -93,6 +144,7 @@ class GGBPlotter {
     }
     exportPNG64(alpha, dpi) {
         return __awaiter(this, void 0, void 0, function* () {
+            DEBUG && console.log("exportPNG64", alpha, dpi);
             const page = yield this.pagePromise;
             const out = yield page.evaluate((alpha, dpi) => window.ggbApplet.getPNGBase64(1, alpha, dpi || 300), alpha, dpi);
             return "data:image/png;base64," + out;
@@ -101,6 +153,7 @@ class GGBPlotter {
     exportSVG() {
         return __awaiter(this, void 0, void 0, function* () {
             const page = yield this.pagePromise;
+            DEBUG && page.on('console', msg => console.log('PAGE LOG:', msg.text()));
             return page.evaluate(() => window.ggbApplet.exportSVG());
         });
     }
@@ -120,6 +173,7 @@ class GGBPlotter {
     exportPDF64() {
         return __awaiter(this, void 0, void 0, function* () {
             const page = yield this.pagePromise;
+            DEBUG && page.on('console', msg => console.log('PAGE LOG:', msg.text()));
             return page.evaluate(() => window.ggbApplet.exportPDF());
         });
     }
@@ -132,6 +186,7 @@ class GGBPlotter {
     exportGGB64() {
         return __awaiter(this, void 0, void 0, function* () {
             const page = yield this.pagePromise;
+            DEBUG && page.on('console', msg => console.log('PAGE LOG:', msg.text()));
             return page.evaluate(() => window.ggbApplet.getBase64());
         });
     }
@@ -160,12 +215,14 @@ class GGBPlotter {
     reset() {
         return __awaiter(this, void 0, void 0, function* () {
             const page = yield this.pagePromise;
+            DEBUG && page.on('console', msg => console.log('PAGE LOG:', msg.text()));
             yield page.evaluate(() => window.ggbApplet.reset());
         });
     }
     exec(ggbAppletProperty, args) {
         return __awaiter(this, void 0, void 0, function* () {
             const page = yield this.pagePromise;
+            DEBUG && page.on('console', msg => console.log('PAGE LOG:', msg.text()));
             yield page.evaluate((prop, argz) => {
                 const property = window.ggbApplet[prop];
                 if (typeof (property) === "function") {
@@ -180,9 +237,9 @@ class GGBPlotter {
     release() {
         return __awaiter(this, void 0, void 0, function* () {
             const page = yield this.pagePromise;
+            DEBUG && page.on('console', msg => console.log('PAGE LOG:', msg.text()));
             yield page.evaluate(() => window.ggbApplet.reset());
             if (this.releasedEmitter) {
-                // notify to the cue that a worker has been released and must be returned to the pool
                 this.releasedEmitter.emit("released", this);
             }
             if (this.browser) {

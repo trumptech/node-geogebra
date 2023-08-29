@@ -1,17 +1,23 @@
 /// <reference types="node" />
+/// <reference types="node" />
 import * as puppeteer from 'puppeteer';
 import { EventEmitter } from 'events';
 import { GGBOptions } from './GGBOptions';
 export declare class GGBPlotter {
     releasedEmitter: EventEmitter;
-    id: string | number;
+    id: string;
     poolOpts: GGBOptions;
     pagePromise: Promise<puppeteer.Page>;
     browser: puppeteer.Browser;
-    constructor(id?: number | GGBOptions, page?: puppeteer.Page, releasedEmitter?: EventEmitter);
+    constructor(options?: GGBOptions, page?: puppeteer.Page, releasedEmitter?: EventEmitter);
     private createPage;
     ready(): Promise<puppeteer.Page>;
     evalGGBScript(ggbScript: string[], width?: number, height?: number): Promise<void>;
+    setFileJSON(fileJSON: Record<"archive", Record<"fileName" | "fileContent", string>[]>): Promise<void>;
+    addFileJSON(fileJSON: Record<"fileName" | "fileContent", string>[]): Promise<void>;
+    getFileJSON(): Promise<Record<"archive", Record<"fileName" | "fileContent", string>[]>>;
+    setXML(xml: string): Promise<void>;
+    exportXML(): Promise<string>;
     exportPNG(alpha?: boolean, dpi?: number): Promise<Buffer>;
     exportPNG64(alpha?: boolean, dpi?: number): Promise<string>;
     exportSVG(): Promise<string>;

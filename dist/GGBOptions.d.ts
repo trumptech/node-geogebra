@@ -1,4 +1,4 @@
 export interface GGBOptions {
-    ggb?: "local" | "remote";
+    id?: string;
     plotters?: number;
 }

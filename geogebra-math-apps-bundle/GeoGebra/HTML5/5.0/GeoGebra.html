@@ -35,7 +35,7 @@ var codebase = "https://cdn.geogebra.org/apps/latest/";
 		return document.getElementsByClassName(className)[0];
 	}
 	var finalLang = null;
-	
+
 	function setParamFromURL(paramName){
 		if(getURLparam(paramName)){
 			e("ggw").setAttribute("data-param-"+paramName,getURLparam(paramName));
@@ -51,8 +51,8 @@ var codebase = "https://cdn.geogebra.org/apps/latest/";
 		}
 		document.title = title;
 	}
-	function perspective(id, name){		
-		if(e("ggw")){			
+	function perspective(id, name){
+		if(e("ggw")){
 			e("ggw").className="geogebraweb";
 
 			e("ggw").setAttribute("data-param-appname", window.appID || "classic");
@@ -74,7 +74,7 @@ var codebase = "https://cdn.geogebra.org/apps/latest/";
 				if(id == "exam-cas"){
 					e("ggw").setAttribute("data-param-enableCAS","true");
 					e("ggw").setAttribute("data-param-enable3D","false");
-				}				
+				}
 				e("ggw").setAttribute("data-param-perspective",id);
 			}
 			setParamFromURL("filename");
@@ -107,7 +107,7 @@ var codebase = "https://cdn.geogebra.org/apps/latest/";
 		}
 		return false;
 	}
-	
+
 	function div(styleName){
 		var ret = document.createElement("div");
 		ret.className = styleName;
@@ -124,7 +124,7 @@ var codebase = "https://cdn.geogebra.org/apps/latest/";
 		}
 		return false;
 	}
-	
+
 	function setLocalStorage(key, value){
 		try{
 			if(location.host && window.localStorage){
@@ -180,8 +180,8 @@ var codebase = "https://cdn.geogebra.org/apps/latest/";
 		if (!ret) {
 			return;
 		}
-		var parent = parentTable(ret);		
-		
+		var parent = parentTable(ret);
+
 		parent.addEventListener("click",function(){
 			if(e("ggw")){
 				e("ggw").setAttribute("data-param-showAppsPicker","false");
@@ -189,7 +189,7 @@ var codebase = "https://cdn.geogebra.org/apps/latest/";
 			changeMetaTitle(ret.innerText);
 			perspective(perspectiveId,id.replace("perspective",""));
 		});
-		
+
 		ret.innerHTML = caption;
 	}
 
@@ -229,32 +229,32 @@ var codebase = "https://cdn.geogebra.org/apps/latest/";
 		if(e("ggbPage")){
 			e("ggbPage").style.display = "";
 		}
-		
+
 		if(finalLang && finalLang != lang){
 			console.log("wrong lang");
 			return;
-		}		
+		}
 		if(e("ggbPage")){
 			setPickerLabels(props.menu);
 		}
 	}
-	
+
 	function showInEnglish(){
 			if(!window.__GGB__keysVar && e("ggbPage")){
 				setPickerLabels({});
-	
+
 				e("ggbPage").style.display="";
 			}
-			
+
 		}
-	var langs = ["af",  "ar",  "ar-MA",  "ar-TN",  "bg",  "bs",  "ca",  "ca-XV",  "cs",  "cy",  "da", 
-	"de-AT",  "de",  "el",  "en-AU",  "en-GB",  "en",  "eo",  "es-ES",  "es",  "es-UY",  "et",  "eu", 
+	var langs = ["af",  "ar",  "ar-MA",  "ar-TN",  "bg",  "bs",  "ca",  "ca-XV",  "cs",  "cy",  "da",
+	"de-AT",  "de",  "el",  "en-AU",  "en-GB",  "en",  "eo",  "es-ES",  "es",  "es-UY",  "et",  "eu",
 	"fa",  "fi",  "fr",  "gl",  "hi",  "hr",  "hu",  "hy",  "in",  "is",  "it",  "he",
-	"ja",  "yi",  "ka",  "kk",  "km",  "kn",  "ko",  "lt",  "lv",  "mk",  "ml",  "mn",  "mr",  "ms", 
+	"ja",  "yi",  "ka",  "kk",  "km",  "kn",  "ko",  "lt",  "lv",  "mk",  "ml",  "mn",  "mr",  "ms",
 	"ne",  "nl-NL",  "nl",  "no",  "nb",  "nn",  "pl",  "pt",  "pt-PT",  "ro",  "ru",  "si",
-	"sk",  "sl",  "sq",  "sr",  "sv",  "ta",  "tg",  "th",  "fil",  "tr",  "ty",  "ug",  "uk", 
+	"sk",  "sl",  "sq",  "sr",  "sv",  "ta",  "tg",  "th",  "fil",  "tr",  "ty",  "ug",  "uk",
 	"ur",  "vi",  "xh",  "zh-CN", "zh-TW"];
-	
+
 	function validLang(lang){
 		lang=lang.replace("_","-").replace("tl","fil").replace("ji","yi").replace("no-NO-NY","nn");
 		if(lang.substring(0,2) == "no"){
@@ -288,7 +288,7 @@ var codebase = "https://cdn.geogebra.org/apps/latest/";
 	function switchLang(lang){
 		var storedTranslation = {};
 		if(getLocalStorage("translation")){
-			try { 
+			try {
 				storedTranslation = JSON.parse(localStorage.translation);
 			}
 			catch(e){
@@ -305,8 +305,8 @@ var codebase = "https://cdn.geogebra.org/apps/latest/";
 			var l10n = document.createElement("script");
 			document.head.appendChild(l10n);
 			l10n.onload = function(){
-			
-			
+
+
 				showInLang(lang);
 				if(window.__GGB__keysVar[lang]){
 					var obj = {};
@@ -314,18 +314,18 @@ var codebase = "https://cdn.geogebra.org/apps/latest/";
 					obj[lang] = window.__GGB__keysVar[lang];
 					setLocalStorage("translation", JSON.stringify(obj));
 				}
-				
+
 			}
 			l10n.setAttribute("src", codebase + module+"/js/properties_keys_"+lang+".js");
 		}
-		
-		
+
+
 	}
 function insertScript(){
-	var app = document.createElement("script");		
+	var app = document.createElement("script");
 	app.setAttribute("src",codebase+module+"/js/webfont.js");
 	document.head.appendChild(app);
-		
+
 	app = document.createElement("script");
 	app.setAttribute("src",codebase+module+"/"+module+".nocache.js");
 	window.setTimeout(function(){
@@ -341,7 +341,7 @@ function insertScript(){
 		window.setTimeout(showInEnglish, 1000);
 		switchLang(validLang(lang));
 	}
-	
+
 	function installWorker(){
 			window.GGBT_offlineRequestHandler = (function() {
 		    "use strict";
@@ -376,14 +376,14 @@ function insertScript(){
 		e("ggw").setAttribute("data-param-prerelease",prereleaseParam);
 		e("ggw").setAttribute("data-param-showlogging",true);
 	}
-	
+
 	function setDebug(debugParam){
 		e("ggw").setAttribute("data-param-showlogging",debugParam);
 	}
-	
+
 	function getPerspective(){
 		if(getURLparam("perspective")){
-			return getURLparam("perspective");			
+			return getURLparam("perspective");
 		}
 		var parts = location.pathname.split("/");
 		var path = parts.length == 1 || parts[parts.length-1].length? parts[parts.length-1] : parts[parts.length-2] ;
@@ -400,7 +400,7 @@ function insertScript(){
 				"3d":"https://play.google.com/store/apps/details?id=org.geogebra.android.g3d"};
 		var iosLinks = {"graphing":"https://itunes.apple.com/us/app/geogebra-graphing-calculator/id1146717204",
 				"geometry":"https://itunes.apple.com/us/app/geogebra-geometry-calculator/id1232591335"};
-		
+
 		if(/iPhone|iPad|iPod/i
 			.test(window.navigator.userAgent)){
 			link = iosLinks[window.appID];
@@ -433,14 +433,14 @@ function insertScript(){
 			tryApp.style.opacity = 0;
 			insertScript();
 		});
-		
+
 		tryApp.className = "tryApp";
 		tryApp.target = "_blank";
 		tryApp.rel = "noreferrer noopener";
 		tryApp.href = link;
 		return true;
 	}
- 
+
 	function checkLogin(){
 		installWorker();
 		var names = {'geometry':2, 'spreadsheet':3, 'cas':4, '3d':5, 'probability':6, 'graphing':1, 'whiteboard':7,'calculator':8};
@@ -458,7 +458,7 @@ function insertScript(){
 				.test(window.navigator.userAgent) && c("appName") && !skipAppsPicker && !location.pathname.match(/lti/)){
 			wait = mobileStartscreen();
 		}
-		
+
 		function resizeStart(){
 			if(e("perspectivesBox")){
 				if(window.innerHeight < 650 || window.innerWidth < 650){
@@ -468,8 +468,8 @@ function insertScript(){
 				}
 			}
 		}
-		
-	
+
+
 		resizeStart();
 		window.addEventListener && window.addEventListener("resize", resizeStart);
 		if(e("ggw")){
@@ -481,7 +481,7 @@ function insertScript(){
 			}
 			if(getURLparam("debug") || debug || isLocalhost()){
 				setDebug(debug || true);
-				
+
 			}
 			if(location.host.indexOf("alpha") == 0){
 				setPrerelease("canary");
@@ -492,8 +492,8 @@ function insertScript(){
 				codebase = "./";
 			}
 		}
-	
-		
+
+
 		if(tubeid){
 			if(e("ggw")){
 				e("ggw").setAttribute("data-param-tubeid",tubeid);
@@ -506,7 +506,7 @@ function insertScript(){
 				var preview = document.createElement("img");
 				preview.style.margin="auto";
 				preview.style.position="absolute";
-				
+
 				var xhr = new XMLHttpRequest();
 				var materialHost = isLocalhost() ? "https://beta.geogebra.org":"";
 				xhr.open("GET", materialHost + "/api/material_preview.php?u="+tubeid);
@@ -521,7 +521,7 @@ function insertScript(){
 					}
 				};
 				xhr.send();
-				
+
 				previewDiv.appendChild(preview);
 				document.body.appendChild(previewDiv);
 				perspective(false);
@@ -529,8 +529,8 @@ function insertScript(){
 				return;
 			}
 		}
-		else if(getPerspective()){	
-			 	
+		else if(getPerspective()){
+
 			var pName = getPerspective();
 			if( pName.substring(0,6)=="search" || pName.substring(0,4) == "exam"){
 				if(e("perspectivesBox")){
@@ -546,30 +546,30 @@ function insertScript(){
 			wait || insertScript();
 			showStartScreen();
 			return;
-			 
+
 		}
 		else if(skipAppsPicker ){
 			perspective(false);
 			insertScript();
 			return;
 		}
-		
+
 		//showStartScreen();
-		
-		
+
+
 		wait || insertScript();
-	 
-		
+
+
 		perspective(false, "picker"); //TODO
-		
+
 	}
 </script>
 <script type="text/javascript">
 // test to see if the app is running as a chrome webapp
 document.isChromeWebapp = function isChromeWebapp() {
-	if (typeof chrome === 'object' && 
-			typeof chrome.app === 'object' && 
-			typeof chrome.app.isInstalled === 'boolean' && 
+	if (typeof chrome === 'object' &&
+			typeof chrome.app === 'object' &&
+			typeof chrome.app.isInstalled === 'boolean' &&
 			chrome.app.isInstalled) {
 			return true;
 		}
@@ -587,14 +587,14 @@ document.isChromeWebapp = function isChromeWebapp() {
 	} else {
 		ga('create','UA-1780044-1','auto');
 	}
-	
+
 	ga('send', 'pageview');
-	
+
 	var gaPrefixes = {"graphing":"Graphing", "geometry":"Geometry"};
 	var gaLabel = gaPrefixes[window.appID] || "Classic";
-	gaLabel += appOnline ? " Web" : " Offline";	
+	gaLabel += appOnline ? " Web" : " Offline";
 	ga('send', 'event', 'Startup', analyticsVersion, gaLabel);
-	</script> 
+	</script>
 	<script async src='https://www.google-analytics.com/analytics.js'></script>
  	<!-- Google Analytics (End) -->
     <script>
@@ -603,7 +603,7 @@ document.isChromeWebapp = function isChromeWebapp() {
 	    GGW_appengine.CLIENT_ID = "";
 	    GGW_appengine.USER_EMAIL = "";
   	</script>
-    
+
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
     <style>
     body {
@@ -643,7 +643,7 @@ border-spacing:0;
     right: 0px !important;
     left: auto !important;
     /* float: right; */
-    
+
 }
 .perspectivesCaption{
 	color: #6161FF !important;
@@ -857,13 +857,13 @@ width:20%;
 }
 /** Start scren splitter**/
 .startScreen.splitter{
-position: absolute; 
-overflow: hidden; 
-left: 20%; 
-top: 53px; 
-bottom: 0px; 
-width: 8px; 
-background-color:#f8f8f8; 
+position: absolute;
+overflow: hidden;
+left: 20%;
+top: 53px;
+bottom: 0px;
+width: 8px;
+background-color:#f8f8f8;
 border:1px solid #dcdcdc
 }
 
@@ -984,7 +984,7 @@ div.SymbolTablePopup{
                  <div class="toolbar_button" style="border-width: 1px;">
 				 <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE1LjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4NCjxzdmcgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjUxMnB4Ig0KCSBoZWlnaHQ9IjUxMnB4IiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNTEyIDUxMjsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPGcgaWQ9Im1vZGVfeDVGX2FuZ2xlIj4NCgk8cGF0aCBzdHlsZT0ib3BhY2l0eTowLjI7ZmlsbDojRkYwMDAwOyIgZD0iTTEwOC40MTUsMzM1LjUxMmwxNTkuNTE0LDQ0LjUxN2MwLDAsMzUuMTc5LTg4LjExMy00OC4xMjUtMTYzLjgyMUwxMDguNDE1LDMzNS41MTJ6Ii8+DQoJPHBhdGggc3R5bGU9ImZpbGw6bm9uZTtzdHJva2U6I0ZGMDAwMDtzdHJva2Utd2lkdGg6MTM7c3Ryb2tlLW1pdGVybGltaXQ6MTA7IiBkPSJNMTA4LjQxNSwzMzUuNTEybDE1OS41MTQsNDQuNTE3DQoJCWMwLDAsMzUuMTc5LTg4LjExMy00OC4xMjUtMTYzLjgyMUwxMDguNDE1LDMzNS41MTJ6Ii8+DQoJPHBhdGggc3R5bGU9ImZpbGw6I0ZGMDAwMDsiIGQ9Ik0zNTAuNywyOTkuNTQ3Yy03LjcxMSwwLjAwMS0xNC45NC0zLjQzMy0xOS41NzMtOS43M2wtMC4wNjQtMC4wOQ0KCQljLTEyLjMyNi0xNy41NTUtOC43Ny00MC45NTcsMS41OTQtNTIuNTcxYzcuNjk4LTguNjI4LDE4LjQzMS0xMC40NDMsMjguNzA2LTQuODQ5bDAuMjQ0LDAuMTQxDQoJCWM0LjgwMSwyLjk3NSw4LjM3Niw2LjYyOSwxMS4xNjUsMTAuNjk4YzEuODE3LTcuMjQ5LDMuNjI1LTEwLjI3Myw1LjA4My0xMi43MTNjMC43OS0xLjMyMSwxLjE4Ni0xLjk4NCwxLjQ2My0zLjI0N2w5Ljc2OCwyLjE0Mw0KCQljLTAuNjI1LDIuODUyLTEuNjUyLDQuNTcxLTIuNjQ2LDYuMjMzYy0xLjY0MSwyLjc0Ni00LjA5Miw2Ljg0OS02LjQwOCwyMy4xNGMwLjkxNCwyLjc2MiwxLjczLDUuNTU5LDIuNTQzLDguMzM2DQoJCWMyLjQ5Niw4LjU0NCw0Ljg1NSwxNi42MTMsOS43NTEsMjIuODY1bC03Ljg3Myw2LjE2NmMtMy40MjctNC4zNzYtNS43OTMtOS4yNjUtNy42ODEtMTQuMzIzDQoJCWMtMy43LDguMzM1LTEwLjAwMywxMy41NDYtMTYuMzE1LDE1Ljk2NUMzNTcuMjI0LDI5OC45NDgsMzUzLjkyLDI5OS41NDcsMzUwLjcsMjk5LjU0N3ogTTMzOS4yMTMsMjgzLjkzNA0KCQljMy44NzQsNS4yMjEsMTAuOTY1LDcuMDA1LDE3LjY2NSw0LjQzOGM5LjQ5MS0zLjYzNywxNC4zNDItMTQuMTM1LDEyLjk3Ny0yOC4wODFsLTAuMDU3LTAuNTc4bDAuMDAxLTAuMDAzDQoJCWMtMi43MzUtNy42MjUtNi4zOS0xNC4zMy0xMy4zMzktMTguNjg2Yy03Ljc0NS00LjE1LTEzLjE1OC0wLjc4LTE2LjM0MywyLjc4OUMzMzIuMjcsMjUyLjYwOCwzMzAuMDQxLDI3MC44MTcsMzM5LjIxMywyODMuOTM0eiIvPg0KCTxsaW5lIHN0eWxlPSJmaWxsOm5vbmU7c3Ryb2tlOiMxQTE3MUI7c3Ryb2tlLXdpZHRoOjEzOyIgeDE9IjEwOC40MTUiIHkxPSIzMzUuNTEzIiB4Mj0iMzMzLjc5NiIgeTI9Ijk0LjExNCIvPg0KCTxsaW5lIHN0eWxlPSJmaWxsOm5vbmU7c3Ryb2tlOiMxQTE3MUI7c3Ryb2tlLXdpZHRoOjEzOyIgeDE9IjEwOC40MTUiIHkxPSIzMzUuNTEzIiB4Mj0iNDAzLjU4NCIgeTI9IjQxNy44ODYiLz4NCgk8Zz4NCgkJPGNpcmNsZSBzdHlsZT0iZmlsbDojMDAwMEZGOyIgY3g9IjMzMy43OTYiIGN5PSI5NC4xMTMiIHI9IjM1Ii8+DQoJCTxwYXRoIGQ9Ik0zNTUuOTE0LDc4LjYyN2M4LjUzNywxMi4xOTMsNS41NjMsMjkuMDY0LTYuNjMxLDM3LjYwNGMtMTIuMTk1LDguNTM5LTI5LjA2Niw1LjU2NC0zNy42MDUtNi42MzENCgkJCXMtNS41NjQtMjkuMDY0LDYuNjMxLTM3LjYwNFMzNDcuMzczLDY2LjQzMiwzNTUuOTE0LDc4LjYyNyBNMzY2LjU2Myw3MS4xN2MtMTIuNjcyLTE4LjA5Ni0zNy42MTUtMjIuNDkyLTU1LjcwOS05LjgyMg0KCQkJYy0xOC4wOTYsMTIuNjctMjIuNDk2LDM3LjYxMy05LjgyNCw1NS43MDljMTIuNjcyLDE4LjA5OCwzNy42MTMsMjIuNDk1LDU1LjcwOSw5LjgyNA0KCQkJQzM3NC44MzQsMTE0LjIwOSwzNzkuMjM0LDg5LjI2OCwzNjYuNTYzLDcxLjE3TDM2Ni41NjMsNzEuMTd6Ii8+DQoJPC9nPg0KCTxnPg0KCQk8Y2lyY2xlIHN0eWxlPSJmaWxsOiMwMDAwRkY7IiBjeD0iMTA4LjQxNSIgY3k9IjMzNS41MTIiIHI9IjM1Ii8+DQoJCTxwYXRoIGQ9Ik0xMzAuNTMzLDMyMC4wMjVjOC41MzcsMTIuMTkzLDUuNTYzLDI5LjA2NC02LjYzMSwzNy42MDRjLTEyLjE5NSw4LjUzOS0yOS4wNjYsNS41NjQtMzcuNjA1LTYuNjMxDQoJCQlzLTUuNTY0LTI5LjA2NCw2LjYzMS0zNy42MDRTMTIxLjk5MiwzMDcuODMsMTMwLjUzMywzMjAuMDI1IE0xNDEuMTgyLDMxMi41NjhjLTEyLjY3Mi0xOC4wOTYtMzcuNjE1LTIyLjQ5Mi01NS43MDktOS44MjINCgkJCWMtMTguMDk2LDEyLjY3LTIyLjQ5NiwzNy42MTMtOS44MjQsNTUuNzA5YzEyLjY3MiwxOC4wOTgsMzcuNjEzLDIyLjQ5NCw1NS43MDksOS44MjQNCgkJCUMxNDkuNDUzLDM1NS42MDcsMTUzLjg1NCwzMzAuNjY2LDE0MS4xODIsMzEyLjU2OEwxNDEuMTgyLDMxMi41Njh6Ii8+DQoJPC9nPg0KCTxnPg0KCQk8Y2lyY2xlIHN0eWxlPSJmaWxsOiMwMDAwRkY7IiBjeD0iNDAzLjU4NCIgY3k9IjQxNy44ODUiIHI9IjM1Ii8+DQoJCTxwYXRoIGQ9Ik00MjUuNzAyLDQwMi4zOThjOC41MzcsMTIuMTkzLDUuNTYzLDI5LjA2NC02LjYzMSwzNy42MDRjLTEyLjE5NSw4LjUzOS0yOS4wNjYsNS41NjQtMzcuNjA1LTYuNjMxDQoJCQlzLTUuNTY0LTI5LjA2NCw2LjYzMS0zNy42MDRTNDE3LjE2MSwzOTAuMjAzLDQyNS43MDIsNDAyLjM5OCBNNDM2LjM1MSwzOTQuOTQxYy0xMi42NzItMTguMDk2LTM3LjYxNS0yMi40OTItNTUuNzA5LTkuODIyDQoJCQljLTE4LjA5NiwxMi42Ny0yMi40OTYsMzcuNjEzLTkuODI0LDU1LjcwOWMxMi42NzIsMTguMDk4LDM3LjYxMywyMi40OTQsNTUuNzA5LDkuODI0DQoJCQlDNDQ0LjYyMiw0MzcuOTgsNDQ5LjAyMiw0MTMuMDM5LDQzNi4zNTEsMzk0Ljk0MUw0MzYuMzUxLDM5NC45NDF6Ii8+DQoJPC9nPg0KPC9nPg0KPGcgaWQ9IkViZW5lXzEiPg0KPC9nPg0KPC9zdmc+DQo=" class="gwt-Image toolbar_icon" draggable="false" style="width: 32px;">
 				 </div>
-				 </li> 
+				 </li>
 				 <li  class="toolbar_item">
                  <div class="toolbar_button" style="border-width: 1px;">
 				 <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE1LjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4NCjxzdmcgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjUxMnB4Ig0KCSBoZWlnaHQ9IjUxMnB4IiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNTEyIDUxMjsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPGcgaWQ9Im1vZGVfeDVGX21pcnJvcmF0bGluZSI+DQoJPGc+DQoJCTxjaXJjbGUgc3R5bGU9ImZpbGw6IzAwMDBGRjsiIGN4PSIxMTUuODUyIiBjeT0iMzczLjUyMSIgcj0iMzUiLz4NCgkJPHBhdGggZD0iTTExNS44NTIsMzQ2LjUyMWMxNC44ODgsMCwyNywxMi4xMTIsMjcsMjdzLTEyLjExMiwyNy4wMDEtMjcsMjcuMDAxcy0yNy0xMi4xMTMtMjctMjcuMDAxDQoJCQlTMTAwLjk2NCwzNDYuNTIxLDExNS44NTIsMzQ2LjUyMSBNMTE1Ljg1MiwzMzMuNTIxYy0yMi4wOTIsMC00MCwxNy45MDktNDAsNDBzMTcuOTA4LDQwLjAwMSw0MCw0MC4wMDFzNDAtMTcuOTEsNDAtNDAuMDAxDQoJCQlTMTM3Ljk0NCwzMzMuNTIxLDExNS44NTIsMzMzLjUyMUwxMTUuODUyLDMzMy41MjF6Ii8+DQoJPC9nPg0KCTxnPg0KCQk8Y2lyY2xlIHN0eWxlPSJmaWxsOiNGRjAwMDA7IiBjeD0iMzkwLjIxNyIgY3k9IjE0My4yODgiIHI9IjM1Ii8+DQoJCTxwYXRoIGQ9Ik0zOTAuMjE3LDExNi4yODhjMTQuODg4LDAsMjcsMTIuMTEyLDI3LDI3YzAsMTQuODg4LTEyLjExMiwyNy4wMDEtMjcsMjcuMDAxcy0yNy0xMi4xMTMtMjctMjcuMDAxDQoJCQlDMzYzLjIxNywxMjguNCwzNzUuMzI5LDExNi4yODgsMzkwLjIxNywxMTYuMjg4IE0zOTAuMjE3LDEwMy4yODhjLTIyLjA5MiwwLTQwLDE3LjkwOS00MCw0MGMwLDIyLjA5MSwxNy45MDgsNDAuMDAxLDQwLDQwLjAwMQ0KCQkJczQwLTE3LjkxLDQwLTQwLjAwMUM0MzAuMjE3LDEyMS4xOTcsNDEyLjMwOSwxMDMuMjg4LDM5MC4yMTcsMTAzLjI4OEwzOTAuMjE3LDEwMy4yODh6Ii8+DQoJPC9nPg0KCTxsaW5lIHN0eWxlPSJmaWxsOm5vbmU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjEzOyIgeDE9IjM1LjAyNSIgeTE9Ii03Ljk4MyIgeDI9IjQ3Ni45NzUiIHkyPSI1MTkuOTgzIi8+DQo8L2c+DQo8ZyBpZD0iRWJlbmVfMSI+DQo8L2c+DQo8L3N2Zz4NCg==" class="gwt-Image toolbar_icon" draggable="false" style="width: 32px;">
@@ -1035,7 +1035,7 @@ div.SymbolTablePopup{
                  <div class="toolbar_button" style="border-width: 1px;">
 				 <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE1LjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4NCjxzdmcgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjUxMnB4Ig0KCSBoZWlnaHQ9IjUxMnB4IiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNTEyIDUxMjsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPGcgaWQ9Im1vZGVfeDVGX3NvbHZlIj4NCgk8Zz4NCgkJPHBhdGggZD0iTTIwOS4yNzEsMzMxaC0zNC4yNzdsLTQzLjk0NS01OS4xOEw4OC41NjgsMzMxSDU2LjkyOGw1OS43NjYtNzcuNjM3TDYxLjYxNSwxODFoMzQuMjc3bDM5LjU1MSw1My42MTNMMTczLjgyMiwxODFoMzEuMzQ4DQoJCQlsLTU1LjY2NCw3Mi4zNjNMMjA5LjI3MSwzMzF6Ii8+DQoJCTxwYXRoIHN0eWxlPSJmaWxsOiNGRjAwMDA7IiBkPSJNNDU1LjA3MiwyMjIuODk1SDI3NS4xODl2LTE4LjQ1N2gxNzkuODgzVjIyMi44OTV6IE00NTUuMDcyLDI3Ny42OEgyNzUuMTg5di0xOC43NWgxNzkuODgzVjI3Ny42OA0KCQkJeiIvPg0KCTwvZz4NCjwvZz4NCjxnIGlkPSJFYmVuZV8xIj4NCjwvZz4NCjwvc3ZnPg0K" class="gwt-Image toolbar_icon" draggable="false" style="width: 32px;">
 				 </div>
-				 </li> 
+				 </li>
 				 <li  class="toolbar_item">
                  <div class="toolbar_button" style="border-width: 1px;">
 				 <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE1LjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4NCjxzdmcgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjUxMnB4Ig0KCSBoZWlnaHQ9IjUxMnB4IiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNTEyIDUxMjsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPGcgaWQ9Im1vZGVfeDVGX25zb2x2ZSI+DQoJPGc+DQoJCTxwYXRoIGQ9Ik0yMDkuMjcxLDMzMWgtMzQuMjc3bC00My45NDUtNTkuMThMODguNTY4LDMzMUg1Ni45MjhsNTkuNzY2LTc3LjYzN0w2MS42MTUsMTgxaDM0LjI3N2wzOS41NTEsNTMuNjEzTDE3My44MjIsMTgxaDMxLjM0OA0KCQkJbC01NS42NjQsNzIuMzYzTDIwOS4yNzEsMzMxeiIvPg0KCQk8cGF0aCBzdHlsZT0iZmlsbDojRkYwMDAwOyIgZD0iTTQ1NS4wNzIsMjEzLjgxM2MtMTMuODcsMTMuMDg3LTMwLjk1OSwxOS42MjktNTEuMjcsMTkuNjI5Yy05LjU3MiwwLTIzLjM5Mi0zLjE3Mi00MS40NTUtOS41MjENCgkJCWMtMTguMDY4LTYuMzQ1LTMyLjI3Ny05LjQyMS00Mi42MjctOS4yMjljLTguNzg5LDAuMTk3LTE2LjQ1NywyLjEwMS0yMi45OTgsNS43MTNjLTYuNTQ2LDMuNjE2LTEzLjcyNCw5LjMyOS0yMS41MzMsMTcuMTM5DQoJCQl2LTIwLjgwMWMxNC4wNjMtMTQuMDYzLDMxLjY0MS0yMC44MDEsNTIuNzM0LTIwLjIxNWM4Ljk4MSwwLjE5NywyMi4xMTksMy4zNjksMzkuNDA0LDkuNTIxczMwLjcxMSw5LjIyOSw0MC4yODMsOS4yMjkNCgkJCWM5LjE3OCwwLDE3LjI4NS0xLjg1NCwyNC4zMTYtNS41NjZjNy4wMzEtMy43MDgsMTQuNzQ0LTkuMjc0LDIzLjE0NS0xNi42OTlWMjEzLjgxM3ogTTQ1NS4wNzIsMjY0Ljc4OQ0KCQkJYy0xMy44NywxMy4wODgtMzAuOTU5LDE5LjYyOS01MS4yNywxOS42MjljLTkuNTcyLDAtMjMuMzkyLTMuMTcyLTQxLjQ1NS05LjUyMWMtMTguMDY4LTYuMzQ1LTMyLjI3Ny05LjQyMS00Mi42MjctOS4yMjkNCgkJCWMtOC43ODksMC4xOTctMTYuNDU3LDIuMTAyLTIyLjk5OCw1LjcxM2MtNi41NDYsMy42MTYtMTMuNzI0LDkuMzI5LTIxLjUzMywxNy4xMzl2LTIwLjgwMQ0KCQkJYzE0LjA2My0xNC4wNjMsMzEuNjQxLTIwLjgwMSw1Mi43MzQtMjAuMjE1YzguOTgxLDAuMTk3LDIyLjExOSwzLjM2OSwzOS40MDQsOS41MjFzMzAuNzExLDkuMjI5LDQwLjI4Myw5LjIyOQ0KCQkJYzkuMTc4LDAsMTcuMjg1LTEuODU0LDI0LjMxNi01LjU2NmM3LjAzMS0zLjcwOCwxNC43NDQtOS4yNzQsMjMuMTQ1LTE2LjY5OVYyNjQuNzg5eiIvPg0KCTwvZz4NCjwvZz4NCjxnIGlkPSJFYmVuZV8xIj4NCjwvZz4NCjwvc3ZnPg0K" class="gwt-Image toolbar_icon" draggable="false" style="width: 32px;">
@@ -1059,16 +1059,16 @@ div.SymbolTablePopup{
 				 </ul>
             </div>
             <div class="rightButtonPanel startScreen">
-            
+
             <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABQElEQVR42tVX7Q2EIAx1hBvhRrgRHMER+OPHGG7ACDfCjXAjOIIjMIJnL5A0DaK0FSMJCQn6eG1fS6mquwxjzGMYhhomrIsc2rbtq+/7d9d1bp0LmTPsrYSep1jrD14OTqvmFQBaAScE7jyZJoQA1hGCk5hE5PBPChTcD9+okSBWjcz/LFtw2PLc/7EnWMJEVjiOG304+F4IqQZEFEI4c8QX2DeCumECTq77ahS/mksA44Cm7kPg8hB4Ec6XiZAWE04ei9OQAHwY7v+KCpEPgw0gOaFQKcVbl1HKGtjDlks1tEXiDwoKD9cxrFP9ghYJm9OQRAg58RXthWlDitKWDPZwiBJemVQ6JqhuexVuo3/UI3Egk1KhOp8EFXBxErEsipE4/RGzR0Jy66qQKCLIBImxKjUiJModTrulYo/anPEDuqonFd/0xkEAAAAASUVORK5CYII=" class="gwt-Image" draggable="false" style="width: 32px;">
-            
-            
+
+
             <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAWklEQVR42mNgGAWjAApSU1MTgHg/nXAChgPS0tIagPg/nXDD4HNARkaGA9QRNMcgu0YT/SgYfACYMhVAqZNOWGG0IBp8DhgFo2AUDHh7YLQgGvBW8SgYBQMFAAeXmC1ie28NAAAAAElFTkSuQmCC" class="gwt-Image" draggable="false" style="width: 32px;">
             </div>
         </div>
     </div>
-	
-	
+
+
     <div class="ggbPageContent GeoGebraFrame startScreen" id="appsPicker">
 	<div class="gwt-DialogBox DialogBox GeoGebraFrame perspectivesBox" id="perspectivesBox" style="right: 0px; top: 101px; position: absolute; overflow: visible;">
     	<div class=""><table  class=""><tbody>
@@ -1115,7 +1115,7 @@ div.SymbolTablePopup{
 		</div></div></td><td class="dialogMiddleRight"><div class="dialogMiddleRightInner"></div></td></tr><tr class="dialogBottom"><td class="dialogBottomLeft"><div class="dialogBottomLeftInner"></div></td><td class="dialogBottomCenter"><div class="dialogBottomCenterInner"></div></td><td class="dialogBottomRight"><div class="dialogBottomRightInner"></div></td></tr></tbody></table></div>
     </div>
 	</div>
-	
+
 <script type="text/javascript">
     //TODO add this to html
     if(module == "web3d" && lookAndFeel === ""){
@@ -1125,9 +1125,9 @@ div.SymbolTablePopup{
 '</svg></div><span id="download" class="downloadlink">Download</span></a>'+
         '</div>';
     }
-    
+
 </script>
- 
+
 
 
 <div class="startScreen splitter">

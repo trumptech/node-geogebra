@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -10,20 +33,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GGBPool = void 0;
-const puppeteer = require("puppeteer");
+const puppeteer = __importStar(require("puppeteer"));
 const events_1 = require("events");
 const GGBPlotter_1 = require("./GGBPlotter");
 const PriorityQueue_1 = require("./PriorityQueue");
-const path = require("path");
+const path = __importStar(require("path"));
 let window;
 const DEBUG = false;
 class GGBPool {
     constructor(options) {
         this.usedWorkers = [];
-        this.opts = Object.assign({ ggb: "local", plotters: 3 }, options);
+        this.opts = Object.assign({ plotters: 3 }, options);
         this.releasedEmitter = new events_1.EventEmitter();
         this.priorityCue = new PriorityQueue_1.PriorityQueue(this.releasedEmitter);
-        // Return released workers to the pool
         this.releasedEmitter.on("released", (worker) => {
             const indx = this.usedWorkers.indexOf(worker);
             this.usedWorkers.splice(indx, 1);
@@ -35,15 +57,7 @@ class GGBPool {
             if (this.isCreated) {
                 return this;
             }
-            // Wait for browser
-            // "--disable-web-security" --> breaks it
-            const opts = {
-                devtools: false,
-                args: ["--allow-file-access-from-files", "--non-secure",
-                    "--allow-running-insecure-content", "--no-sandbox",
-                    "--no-startup-window"]
-            };
-            this.browser = yield puppeteer.launch(opts);
+            this.browser = yield puppeteer.launch();
             const promises = new Array(this.opts.plotters);
             for (var i = 0; i < this.opts.plotters; i++) {
                 promises[i] = this.browser.createIncognitoBrowserContext();
@@ -54,25 +68,16 @@ class GGBPool {
             for (var i = 0; i < this.opts.plotters; i++) {
                 promises2[i] = browserContexts[i].newPage();
             }
-            // Wait for windows contexts
             this.availablePages = yield Promise.all(promises2);
             DEBUG && console.log("pages have been created");
-            // Load empty geogebra templates
-            let url;
-            if (this.opts.ggb === "local") {
-                const dir = path.resolve(__dirname, "../geogebra-math-apps-bundle/Geogebra/HTML5/5.0/GeoGebra.html");
-                url = "file://" + dir;
-            }
-            else {
-                url = "https://www.geogebra.org/classic";
-            }
+            const dir = path.resolve(__dirname, "../geogebra-math-apps-bundle/Geogebra/HTML5/5.0/simple.html");
+            const url = "file://" + dir;
             let promises3 = new Array(this.opts.plotters);
             for (var i = 0; i < this.opts.plotters; i++) {
                 promises3[i] = this.availablePages[i].goto(url, { waitUntil: 'networkidle2' });
             }
             yield Promise.all(promises3);
             DEBUG && console.log("https://www.geogebra.org/classic have loaded in all pages");
-            // Wait for ... ggbApplet injected    
             promises3 = new Array(this.opts.plotters);
             for (var i = 0; i < this.opts.plotters; i++) {
                 promises3[i] = this.availablePages[i].waitForFunction("window.ggbApplet!=null");
@@ -80,12 +85,9 @@ class GGBPool {
             yield Promise.all(promises3);
             DEBUG && console.log("ggbApplet is ready in all pages");
             promises3 = new Array(this.opts.plotters);
-            for (var i = 0; i < this.opts.plotters; i++) {
-                promises3[i] = this.availablePages[i].evaluate('window.ggbApplet.evalCommand(\'SetPerspective("G")\\nShowGrid(true)\')');
-            }
             yield Promise.all(promises3);
             DEBUG && console.log("All pages have been initialized");
-            this.availableWorkers = this.availablePages.map((p, i) => new GGBPlotter_1.GGBPlotter(i + 1, p, this.releasedEmitter));
+            this.availableWorkers = this.availablePages.map((p, i) => new GGBPlotter_1.GGBPlotter(null, p, this.releasedEmitter));
             DEBUG && console.log("WORKERS HAVE BEEN CREATED");
             return this;
         });
@@ -99,6 +101,7 @@ class GGBPool {
     getGGBPlotter() {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.availableWorkers.length) {
+                DEBUG && console.log('getGGBPlotter', this.availableWorkers.length);
                 return this.pickaWorker();
             }
             else {

@@ -3,16 +3,16 @@ import { PriorityQueue } from "./PriorityQueue";
 
 export class QueueTask {
   isSubscribed: boolean;
-  watcher;
+  watcher: any;
   constructor(public id: number, private cue: PriorityQueue) {
   }
 
   subscribe(): Promise<GGBPlotter> {
     const self = this;
     return new Promise((resolve, reject) => {
-       // Listen to released events from the pool
-      
-       const listener = function(worker) {
+      // Listen to released events from the pool
+
+      const listener = function (worker: GGBPlotter | PromiseLike<GGBPlotter>) {
         //check if am i the first in the cue?
         const order = self.cue.tasks.indexOf(self);
         if (order === 0) {
