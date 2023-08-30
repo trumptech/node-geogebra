@@ -93,12 +93,6 @@ class GGBPool {
             yield Promise.all(promises3);
             DEBUG && console.log("ggbApplet is ready in all pages");
             promises3 = new Array(this.opts.plotters);
-            for (var i = 0; i < this.opts.plotters; i++) {
-                promises3[i] = yield this.availablePages[i].evaluate('window.ggbApplet.setWidth(1280)');
-                promises3[i] = yield this.availablePages[i].evaluate('window.ggbApplet.setHeight(850)');
-                promises3[i] = yield this.availablePages[i].evaluate('window.ggbApplet.showAlgebraInput("bottom")');
-                promises3[i] = yield this.availablePages[i].evaluate('window.ggbApplet.showMenuBar(true)');
-            }
             yield Promise.all(promises3);
             DEBUG && console.log("All pages have been initialized");
             this.availableWorkers = this.availablePages.map((p, i) => new GGBPlotter_1.GGBPlotter(null, p, this.releasedEmitter));
