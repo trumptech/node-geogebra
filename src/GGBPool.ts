@@ -87,9 +87,12 @@ export class GGBPool {
 
 
         promises3 = new Array(this.opts.plotters);
-        // for (var i = 0; i < this.opts.plotters; i++) {
-        //     promises3[i] = this.availablePages[i].evaluate('window.ggbApplet.evalCommand(\'SetPerspective("G")\\nShowGrid(true)\')');
-        // }
+        for (var i = 0; i < this.opts.plotters; i++) {
+            // promises3[i] = this.availablePages[i].evaluate('window.ggbApplet.evalCommand(\'SetPerspective("G")\\nShowGrid(true)\')');
+            promises3[i] = this.availablePages[i].evaluate('window.ggbApplet.setWidth(1280)');
+            promises3[i] = this.availablePages[i].evaluate('window.ggbApplet.setHeight(850)');
+            promises3[i] = this.availablePages[i].evaluate('window.ggbApplet.showAlgebraInput(true)');
+        }
         await Promise.all(promises3);
         DEBUG && console.log("All pages have been initialized");
 

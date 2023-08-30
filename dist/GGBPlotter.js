@@ -87,7 +87,7 @@ class GGBPlotter {
         return __awaiter(this, void 0, void 0, function* () {
             const page = yield this.pagePromise;
             DEBUG && page.on('console', msg => console.log('PAGE LOG:', msg.text()));
-            yield page.setViewport({ width: width || 600, height: (height || 400) + 53 });
+            yield page.setViewport({ width: width || 1280, height: (height || 850) + 53 });
             if (ggbScript && ggbScript.length) {
                 yield page.evaluate((x) => window.ggbApplet.evalCommand(x), ggbScript.join("\n"));
             }
@@ -100,7 +100,7 @@ class GGBPlotter {
             yield page.evaluate((x) => {
                 window.ggbApplet.setFileJSON(x);
             }, fileJSON);
-            yield new Promise(r => setTimeout(r, 100));
+            yield new Promise(r => setTimeout(r, 1500));
         });
     }
     addFileJSON(fileJSON) {
@@ -113,7 +113,7 @@ class GGBPlotter {
                 originalJsonFile.archive = [...originalJsonFile.archive, ...x];
                 window.ggbApplet.setFileJSON(originalJsonFile);
             }, fileJSON);
-            yield new Promise(r => setTimeout(r, 100));
+            yield new Promise(r => setTimeout(r, 1500));
         });
     }
     getFileJSON() {

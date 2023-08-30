@@ -73,7 +73,7 @@ class GGBPlotter {
     async evalGGBScript(ggbScript, width, height) {
         const page = await this.pagePromise;
         DEBUG && page.on('console', msg => console.log('PAGE LOG:', msg.text()));
-        await page.setViewport({ width: width || 600, height: (height || 400) + 53 });
+        await page.setViewport({ width: width || 1280, height: (height || 850) + 53 });
         if (ggbScript && ggbScript.length) {
             await page.evaluate((x) => window.ggbApplet.evalCommand(x), ggbScript.join("\n"));
         }
@@ -84,7 +84,7 @@ class GGBPlotter {
         await page.evaluate((x) => {
             window.ggbApplet.setFileJSON(x);
         }, fileJSON);
-        await new Promise(r => setTimeout(r, 100));
+        await new Promise(r => setTimeout(r, 1500));
     }
     async addFileJSON(fileJSON) {
         DEBUG && console.log("addFileJSON", fileJSON.length);
@@ -95,7 +95,7 @@ class GGBPlotter {
             originalJsonFile.archive = [...originalJsonFile.archive, ...x];
             window.ggbApplet.setFileJSON(originalJsonFile);
         }, fileJSON);
-        await new Promise(r => setTimeout(r, 100));
+        await new Promise(r => setTimeout(r, 1500));
     }
     async getFileJSON() {
         const page = await this.pagePromise;

@@ -67,7 +67,7 @@ export class GGBPlotter {
         DEBUG && page.on('console', msg => console.log('PAGE LOG:', msg.text()));
         // 53 px accounts for the toolbar which cannot be removed in geogebra app mode
 
-        await page.setViewport({ width: width || 600, height: (height || 400) + 53 });
+        await page.setViewport({ width: width || 1280, height: (height || 850) + 53 });
 
         if (ggbScript && ggbScript.length) {
             await page.evaluate((x) => window.ggbApplet.evalCommand(x), ggbScript.join("\n"));
