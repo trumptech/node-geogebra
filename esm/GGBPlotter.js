@@ -73,7 +73,7 @@ class GGBPlotter {
     async evalGGBScript(ggbScript, width, height) {
         const page = await this.pagePromise;
         DEBUG && page.on('console', msg => console.log('PAGE LOG:', msg.text()));
-        await page.setViewport({ width: width || 1280, height: (height || 850) + 53 });
+        await page.setViewport({ width: width || 1280, height: (height || 700) + 53 });
         if (ggbScript && ggbScript.length) {
             await page.evaluate((x) => window.ggbApplet.evalCommand(x), ggbScript.join("\n"));
         }
