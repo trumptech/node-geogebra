@@ -178,7 +178,7 @@ class GGBPlotter {
     async setVisible(name, value) {
         DEBUG && console.log("setVisible", name, value);
         const page = await this.pagePromise;
-        await page.evaluate((alpha, dpi) => window.ggbApplet.setVisible(name, value), name, value);
+        await page.evaluate((name, value) => window.ggbApplet.setVisible(name, value), name, value);
     }
     async reset() {
         const page = await this.pagePromise;

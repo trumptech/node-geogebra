@@ -224,7 +224,7 @@ class GGBPlotter {
         return __awaiter(this, void 0, void 0, function* () {
             DEBUG && console.log("setVisible", name, value);
             const page = yield this.pagePromise;
-            yield page.evaluate((alpha, dpi) => window.ggbApplet.setVisible(name, value), name, value);
+            yield page.evaluate((name, value) => window.ggbApplet.setVisible(name, value), name, value);
         });
     }
     reset() {
