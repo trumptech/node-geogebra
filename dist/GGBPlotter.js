@@ -222,7 +222,9 @@ class GGBPlotter {
     }
     setVisible(name, value) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.setVisible(name, value);
+            DEBUG && console.log("setVisible", name, value);
+            const page = yield this.pagePromise;
+            yield page.evaluate((alpha, dpi) => window.ggbApplet.setVisible(name, value), name, value);
         });
     }
     reset() {
