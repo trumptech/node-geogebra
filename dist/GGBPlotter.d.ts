@@ -28,6 +28,7 @@ export declare class GGBPlotter {
     exportGGB64(): Promise<string>;
     export(format: string): Promise<string | Buffer>;
     export64(format: string): Promise<string>;
+    setVisible(name: string, value: boolean): Promise<void>;
     reset(): Promise<void>;
     exec(ggbAppletProperty: string, args?: any[]): Promise<void>;
     release(): Promise<void>;

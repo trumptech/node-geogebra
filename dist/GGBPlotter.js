@@ -220,6 +220,11 @@ class GGBPlotter {
             }
         });
     }
+    setVisible(name, value) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.setVisible(name, value);
+        });
+    }
     reset() {
         return __awaiter(this, void 0, void 0, function* () {
             const page = yield this.pagePromise;

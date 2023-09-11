@@ -176,6 +176,9 @@ export class GGBPlotter {
             default: return this.exportPNG64();
         }
     }
+    async setVisible(name: string, value: boolean) {
+        this.setVisible(name, value);
+    }
     async reset() {
         const page = await this.pagePromise;
         DEBUG && page.on('console', msg => console.log('PAGE LOG:', msg.text()));
